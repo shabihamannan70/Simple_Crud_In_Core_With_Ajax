@@ -343,3 +343,4 @@ D:\Interview\Core_CRUD\work_01\obj\Debug\net9.0\refint\work_01.dll
 D:\Interview\Core_CRUD\work_01\obj\Debug\net9.0\work_01.pdb
 D:\Interview\Core_CRUD\work_01\obj\Debug\net9.0\work_01.genruntimeconfig.cache
 D:\Interview\Core_CRUD\work_01\obj\Debug\net9.0\ref\work_01.dll
+D:\Interview\Core_CRUD\work_01\obj\Debug\net9.0\work_01.sourcelink.json

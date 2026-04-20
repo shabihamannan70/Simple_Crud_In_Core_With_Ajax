@@ -16,11 +16,44 @@
             data-ajax-success="success">
 
             <div class="row">
-                <label asp-for="EmployeeName" class="col-form-label col-3">Name</label>
                 <div class="col-8">
-                    <input/>
+                    <div class="col-9">
+                        <label asp-for="EmployeeName" class="col-form-label col-3">Name</label>
 
+                        <input name="EmployeeName" class="form-control form-control-sm " />
+                        <span asp-validation-for="EmployeeName" class="text-danger "></span>
+
+                    </div>
+
+                    <div class="col-9">
+                        <label asp-for="BirthDate" class="col-form-label col-3">Birth Date</label>
+
+                        <input name="BirthDate" type="date" class="form-control form-control-sm " />
+                        <span asp-validation-for="BirthDate" class="text-danger "></span>
+
+                    </div>
+                    <div class="col-9">
+                        <label asp-for="Picture" class="col-form-label col-3">Picture</label>
+
+                        <input name="Picture" type="file" class="form-control form-control-sm " onchange="previewImage(event)" />
+                        <span asp-validation-for="Picture" class="text-danger "></span>
+
+                    </div>
+                    <div class="col-9">
+                        <label asp-for="DesignationId" class="col-form-label col-3">Designation</label>
+
+                        <select asp-for="DesignationId" class="form-select" asp-items="@(new SelectList(ViewBag.designation ,"DesignationId","DesignationName")) ">
+                            <option></option>
+                        </select>
+
+                        <span asp-validation-for="DesignationId" class="text-danger "></span>
+
+                    </div>
                 </div>
+                <div class="col-4">
+                    <img id="imgPreview" src="#" alt="Preview" style="margin-top:10px; display:none; width:150px;" />
+                </div>
+                
             </div>
 
         </form>
@@ -32,5 +65,23 @@
         function success(){
             $("#frmCreate").trigger('reset');
         }
+
+
+        function previewImage(event) {
+            const input = event.target;
+            const preview = document.getElementById("imgPreview");
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.style.display = "block";
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
     </script>
 }
