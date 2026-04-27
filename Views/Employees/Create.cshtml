@@ -1,106 +1,4 @@
-﻿@* @model Employee
-@{
-    ViewData["Title"] = "Create";
-}
-<h2 class="display-4">Create</h2>
-<div class="row">
-    <div class="col">
-        <div id="panel"></div>
-        <form id="frmCreate"
-            asp-action="Create"
-            asp-controller="Employees"
-            data-ajax-method="Post"
-            
-            data-ajax-mode="replace"
-            data-ajax-update="#panel"
-            data-ajax-success="success"
-            enctype="multipart/form-data"
-        >
-
-            <div class="row">
-                <div class="col-8">
-                    <div class="col-9">
-                        <label asp-for="EmployeeName" class="col-form-label col-3">Name</label>
-
-                        <input name="EmployeeName" class="form-control form-control-sm " />
-                        <span asp-validation-for="EmployeeName" class="text-danger "></span>
-
-                    </div>
-
-                    <div class="col-9">
-                        <label asp-for="BirthDate" class="col-form-label col-3">Birth Date</label>
-
-                        <input name="BirthDate" type="date" class="form-control form-control-sm " />
-                        <span asp-validation-for="BirthDate" class="text-danger "></span>
-
-                    </div>
-                    <div class="col-9">
-                        <label asp-for="Picture" class="col-form-label col-3">Picture</label>
-
-                        <input name="PictureFile" type="file" class="form-control form-control-sm " onchange="previewImage(event)" />
-                        <span asp-validation-for="Picture" class="text-danger "></span>
-
-                    </div>
-                    <div class="col-9">
-                        <label asp-for="DesignationId" class="col-form-label col-3">Designation</label>
-
-                        <select asp-for="DesignationId" class="form-select" asp-items="@(new SelectList(ViewBag.designation ,"DesignationId","DesignationName")) ">
-                            <option></option>
-                        </select>
-
-                        <span asp-validation-for="DesignationId" class="text-danger "></span>
-
-                    </div>
-                </div>
-                <div class="col-4">
-                    <img id="imgPreview" src="#" alt="Preview" style="margin-top:10px; display:none; width:150px;" />
-                </div>
-                
-            </div>
-            <div>
-                <button type="submit" class="btn  btn-success mt-4">Save</button>
-            </div>
-
-        </form>
-    </div>
-</div>
-
-@section Scripts {
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
-    <script>
-        function success(data) {
-            alert("Employee saved successfully!");
-            window.location.href = '@Url.Action("Index", "Employees")';
-        }
-
-        function success(){
-            $("#frmCreate").trigger('reset');
-        }
-
-
-        function previewImage(event) {
-            const input = event.target;
-            const preview = document.getElementById("imgPreview");
-
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-
-                reader.onload = function (e) {
-                    preview.src = e.target.result;
-                    preview.style.display = "block";
-                };
-
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-               
-        }
-
-    </script>
-} *@
+﻿
 
 @model work_01.Models.EmpVM
 
@@ -172,19 +70,19 @@
 </div>
 
 @section Scripts {
-    @* ভ্যালিডেশন এবং Ajax এর জন্য প্রয়োজনীয় লাইব্রেরি *@
+    
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
     <script>
-        // ১. ইমেজ প্রিভিউ ফাংশন
+        // to Previwe Image
         function previewImage(e) {
             let reader = new FileReader();
             reader.onload = () => $('#imgPreview').attr('src', reader.result).show();
             reader.readAsDataURL(e.target.files[0]);
         }
 
-        // ২. Ajax সাবমিশন
+        
         $(document).ready(function () {
             $("#frmCreate").submit(function (e) {
                 e.preventDefault();
@@ -204,5 +102,7 @@
                 });
             });
         });
+
+        
     </script>
 }

@@ -2,7 +2,7 @@
 
 <form id="frmEdit" asp-action="Edit" enctype="multipart/form-data">
     <input type="hidden" asp-for="EmployeeId" />
-    <input type="hidden" asp-for="Picture" /> @* আগের ছবির নাম ধরে রাখার জন্য *@
+    <input type="hidden" asp-for="Picture" /> 
 
     <div class="row">
         <div class="col-8">
@@ -25,11 +25,10 @@
                 <input asp-for="PictureFile" type="file" class="form-control" onchange="previewImage(event)" />
             </div>
         </div>
-        <div class="col-4">
-            <label>Preview</label>
-            @* বর্তমান ছবিটি দেখাবে, নতুন সিলেক্ট করলে সেটি দেখাবে *@
+        <div class="col-4 ">
+            
             <img id="imgPreview" src="~/Images/@(Model.Picture ?? "no-image.jpg")"
-                 style="width:150px; height:150px; object-fit:cover;" class="img-thumbnail" />
+                 style="width:150px; height:150px; object-fit:cover;" class="img-thumbnail mt-4" />
         </div>
     </div>
     <button type="submit" class="btn btn-primary mt-3">Update Employee</button>

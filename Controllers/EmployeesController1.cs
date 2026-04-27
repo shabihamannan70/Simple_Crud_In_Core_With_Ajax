@@ -50,22 +50,17 @@ namespace work_01.Controllers
 
                 _emp.Employees.Add(employee);
                 await _emp.SaveChangesAsync();
-
-                // সফল হলে JSON রিটার্ন করুন
                 return Json(new { success = true, message = "Saved Successfully!" });
             }
 
             return Json(new { success = false, message = "Validation Failed!" });
         }
 
-
-        // ১. এডিট পেজ লোড করা (GET)
         public async Task<IActionResult> Edit(int id)
         {
             var employee = await _emp.Employees.FindAsync(id);
             if (employee == null) return NotFound();
 
-            // ম্যাপ করুন Employee থেকে EmpVM-এ
             var vm = new EmpVM
             {
                 EmployeeId = employee.EmployeeId,
@@ -79,7 +74,7 @@ namespace work_01.Controllers
             return View(vm);
         }
 
-        // ২. ডাটা আপডেট করা (POST)
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EmpVM vm)
@@ -101,11 +96,11 @@ namespace work_01.Controllers
                     {
                         await vm.PictureFile.CopyToAsync(stream);
                     }
-                    employee.Picture = fileName; // নতুন ছবি সেভ
+                    employee.Picture = fileName;
                 }
 
                 await _emp.SaveChangesAsync();
-                return Ok(); // Ajax সফল হওয়ার জন্য
+                return Ok(); 
             }
             return BadRequest();
         }
@@ -119,7 +114,7 @@ namespace work_01.Controllers
 
             _emp.Employees.Remove(employee);
             await _emp.SaveChangesAsync();
-            return Json(new { success = true }); // Ajax-এর জন্য JSON রিটার্ন করা ভালো
+            return Json(new { success = true }); 
         }
     }
 }
