@@ -1,4 +1,4 @@
-﻿@model Employee
+﻿@* @model Employee
 @{
     ViewData["Title"] = "Create";
 }
@@ -10,10 +10,12 @@
             asp-action="Create"
             asp-controller="Employees"
             data-ajax-method="Post"
-            data-ajax="true"
+            
             data-ajax-mode="replace"
             data-ajax-update="#panel"
-            data-ajax-success="success">
+            data-ajax-success="success"
+            enctype="multipart/form-data"
+        >
 
             <div class="row">
                 <div class="col-8">
@@ -35,7 +37,7 @@
                     <div class="col-9">
                         <label asp-for="Picture" class="col-form-label col-3">Picture</label>
 
-                        <input name="Picture" type="file" class="form-control form-control-sm " onchange="previewImage(event)" />
+                        <input name="PictureFile" type="file" class="form-control form-control-sm " onchange="previewImage(event)" />
                         <span asp-validation-for="Picture" class="text-danger "></span>
 
                     </div>
@@ -55,13 +57,24 @@
                 </div>
                 
             </div>
+            <div>
+                <button type="submit" class="btn  btn-success mt-4">Save</button>
+            </div>
 
         </form>
     </div>
 </div>
 
-@section Scripts{
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
     <script>
+        function success(data) {
+            alert("Employee saved successfully!");
+            window.location.href = '@Url.Action("Index", "Employees")';
+        }
+
         function success(){
             $("#frmCreate").trigger('reset');
         }
@@ -83,5 +96,113 @@
             }
         }
 
+               
+        }
+
+    </script>
+} *@
+
+@model work_01.Models.EmpVM
+
+@{
+    ViewData["Title"] = "Create Employee";
+}
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Add New Employee</h4>
+        </div>
+        <div class="card-body">
+            <form id="frmCreate" asp-action="Create" asp-controller="Employees" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="mb-3 row">
+                            <label asp-for="EmployeeName" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <input asp-for="EmployeeName" class="form-control" placeholder="Enter name" />
+                                <span asp-validation-for="EmployeeName" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label asp-for="BirthDate" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <input asp-for="BirthDate" type="date" class="form-control" />
+                                <span asp-validation-for="BirthDate" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label asp-for="DesignationId" class="col-sm-3 col-form-label">Designation</label>
+                            <div class="col-sm-9">
+                                <select asp-for="DesignationId" class="form-select"
+                                        asp-items="@(new SelectList(ViewBag.designation, "DesignationId", "DesignationName"))">
+                                    <option value="">-- Select Designation --</option>
+                                </select>
+                                <span asp-validation-for="DesignationId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label asp-for="PictureFile" class="col-sm-3 col-form-label">Picture</label>
+                            <div class="col-sm-9">
+                                <input asp-for="PictureFile" type="file" class="form-control" onchange="previewImage(event)" />
+                                <span asp-validation-for="PictureFile" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 text-center border-start">
+                        <h6>Image Preview</h6>
+                        <img id="imgPreview" src="~/Images/no-image.jpg" alt="Preview"
+                             style="width: 180px; height: 200px; object-fit: cover; border: 1px solid #ddd;" class="img-thumbnail" />
+                    </div>
+                </div>
+
+                <div class="card-footer bg-light text-end">
+                    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                    <button type="submit" class="btn btn-success">Save Employee</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @* ভ্যালিডেশন এবং Ajax এর জন্য প্রয়োজনীয় লাইব্রেরি *@
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <script>
+        // ১. ইমেজ প্রিভিউ ফাংশন
+        function previewImage(e) {
+            let reader = new FileReader();
+            reader.onload = () => $('#imgPreview').attr('src', reader.result).show();
+            reader.readAsDataURL(e.target.files[0]);
+        }
+
+        // ২. Ajax সাবমিশন
+        $(document).ready(function () {
+            $("#frmCreate").submit(function (e) {
+                e.preventDefault();
+                if (!$(this).valid()) return;
+
+                $.ajax({
+                    url: this.action,
+                    type: "POST",
+                    data: new FormData(this),
+                    contentType: false,
+                    processData: false,
+                    success: () => {
+                        alert("Employee Created Successfully!");
+                        window.location.href = '@Url.Action("Index", "Employees")';
+                    },
+                    error: () => alert("Error: Could not save data!")
+                });
+            });
+        });
     </script>
 }

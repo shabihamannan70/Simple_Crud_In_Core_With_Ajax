@@ -1,14 +1,62 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Index";
 }
 
+@* টোকেনটি এখানে রাখুন *@
+@Html.AntiForgeryToken()
 
 <div class="row">
     <h1 class="display-4">Index</h1>
-    <div class="d-flex justify-content-end">
-        
+    <div class="d-flex justify-content-end mb-3">
         <a class="btn btn-success btn-sm" asp-controller="Employees" asp-action="Create">Add New</a>
     </div>
 
+    <div class="row">
+        <div class="col">
+            <table class="table table-bordered table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Picture</th>
+                        <th>Employee Name</th>
+                        <th>Birth Date</th>
+                        <th>Designation</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr id="row_@item.EmployeeId">
+                            @* আইডেন্টিফাই করার জন্য আইডি যোগ করা ভালো *@
+                            <td>
+                                <img src="~/Images/@item.Picture" alt="@item.EmployeeName"
+                                     style="width:50px; height:50px; object-fit:cover;" class="rounded-circle" />
+                            </td>
+                            <td>@item.EmployeeName</td>
+                            <td>@item.BirthDate.ToString("dd MMM yyyy")</td>
+                            <td>@item.Designation?.DesignationName</td>
+                            <td class="text-center">
+                                <a class="btn btn-info btn-sm" asp-action="Edit" asp-route-id="@item.EmployeeId">Edit</a>
+                                <button class="btn btn-danger btn-sm" onclick="deleteEmp(@item.EmployeeId)">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    <script>
+                function deleteEmp(id) {
+            if (!confirm("Are you sure?")) return; // এক লাইনে কনফার্মেশন চেক
+
+            var data = { "__RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() };
+
+            $.post('@Url.Action("Delete", "Employees")/' + id, data, function () {
+                location.reload();
+            });
+        }
+    </script>
+}
